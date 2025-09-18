@@ -5,6 +5,10 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disconance.Models", "src\Disconance.Models\Disconance.Models.csproj", "{699EE2B4-DAF5-4376-8A9D-E4335EB5A603}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disconance.Http", "src\Disconance.Http\Disconance.Http.csproj", "{D8BCEFFB-440F-4B8C-AE89-53A89CC33865}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disconance", "src\Disconance\Disconance.csproj", "{61BCE839-3E5D-4678-8D59-C9DE23E5C70A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{699EE2B4-DAF5-4376-8A9D-E4335EB5A603}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{699EE2B4-DAF5-4376-8A9D-E4335EB5A603}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{699EE2B4-DAF5-4376-8A9D-E4335EB5A603}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8BCEFFB-440F-4B8C-AE89-53A89CC33865}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8BCEFFB-440F-4B8C-AE89-53A89CC33865}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8BCEFFB-440F-4B8C-AE89-53A89CC33865}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8BCEFFB-440F-4B8C-AE89-53A89CC33865}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61BCE839-3E5D-4678-8D59-C9DE23E5C70A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61BCE839-3E5D-4678-8D59-C9DE23E5C70A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61BCE839-3E5D-4678-8D59-C9DE23E5C70A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61BCE839-3E5D-4678-8D59-C9DE23E5C70A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
