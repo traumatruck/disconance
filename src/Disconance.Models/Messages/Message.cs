@@ -1,5 +1,8 @@
 using Disconance.Models.Applications;
 using Disconance.Models.Channels;
+using Disconance.Models.Components;
+using Disconance.Models.Interactions;
+using Disconance.Models.Polls;
 using Disconance.Models.Stickers;
 using Disconance.Models.Users;
 
@@ -143,7 +146,7 @@ public class Message
     /// <summary>
     ///     Deprecated in favor of interaction_metadata; sent if the message is a response to an interaction.
     /// </summary>
-    public MessageInteraction? Interaction { get; set; }
+    public Interaction? Interaction { get; set; }
 
     /// <summary>
     ///     The thread that was started from this message, includes thread member object.
@@ -153,7 +156,7 @@ public class Message
     /// <summary>
     ///     Sent if the message contains components like buttons, action rows, or other interactive components.
     /// </summary>
-    public List<MessageComponent>? Components { get; set; }
+    public List<IComponent>? Components { get; set; }
 
     /// <summary>
     ///     Sent if the message contains stickers.

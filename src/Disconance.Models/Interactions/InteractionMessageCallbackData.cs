@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Text.Json.Serialization;
 using Disconance.Models.JsonConverters;
 using Disconance.Models.Messages;
+using Disconance.Models.Polls;
 
 namespace Disconance.Models.Interactions;
 
