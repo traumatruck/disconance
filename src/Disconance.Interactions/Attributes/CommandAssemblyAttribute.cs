@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Disconance.Models;
 
 namespace Disconance.Interactions.Attributes;
 
@@ -8,6 +9,12 @@ namespace Disconance.Interactions.Attributes;
 [AttributeUsage(AttributeTargets.Assembly)]
 public sealed class CommandAssemblyAttribute : Attribute
 {
+    /// <summary>
+    ///     Gets or sets the optional Guild ID associated with the command assembly. If specified, commands within the assembly
+    ///     will only be registered for the specified guild.
+    /// </summary>
+    public Snowflake? GuildId { get; set; } = null;
+
     /// <summary>
     ///     Retrieves all assemblies in the current application domain that are marked with the
     ///     <see cref="CommandAssemblyAttribute" />.

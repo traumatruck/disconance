@@ -1,3 +1,4 @@
+using System.Reflection;
 using Disconance.Models;
 
 namespace Disconance.Interactions.Commands;
@@ -8,9 +9,11 @@ namespace Disconance.Interactions.Commands;
 public interface ICommandRegistrar
 {
     /// <summary>
-    ///     Registers commands, optionally for a specific guild.
+    ///     Registers commands from a specific assembly, optionally for a specific guild.
     /// </summary>
+    /// <param name="commandAssembly">The assembly that contains the commands to register.</param>
     /// <param name="guildId">The optional guild ID to register commands for. If null, registers global commands.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    Task RegisterCommandsAsync(Snowflake? guildId = null, CancellationToken cancellationToken = default);
+    Task RegisterCommandsAsync(Assembly commandAssembly, Snowflake? guildId = null,
+        CancellationToken cancellationToken = default);
 }

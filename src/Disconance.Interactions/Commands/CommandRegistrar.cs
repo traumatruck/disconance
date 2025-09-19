@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Immutable;
+using System.Reflection;
 using Disconance.Configuration;
 using Disconance.Http.Models;
 using Disconance.Http.Requests;
 using Disconance.Http.Requests.Applications;
-using Disconance.Interactions.Attributes;
 using Disconance.Models;
 using Disconance.Models.Interactions;
 using Disconance.Models.Permissions;
@@ -21,7 +21,7 @@ public class CommandRegistrar(
 ) : ICommandRegistrar
 {
     /// <inheritdoc />
-    public async Task RegisterCommandsAsync(Snowflake? guildId = null, CancellationToken cancellationToken = default)
+    public async Task RegisterCommandsAsync(Assembly commandAssembly, Snowflake? guildId = null, CancellationToken cancellationToken = default)
     {
         var applicationId = new Snowflake(disconanceOptions.Value.ApplicationId);
         var simpleCommands = serviceProvider.GetServices<ISimpleCommand>();
@@ -36,8 +36,7 @@ public class CommandRegistrar(
         }).ToList();
 
         // Register complex commands with Discord
-        var commandAssemblies = CommandAssemblyAttribute.GetCommandAssemblies();
-        var assemblyTypes = commandAssemblies.SelectMany(assembly => assembly.GetTypes());
+        var assemblyTypes = commandAssembly.GetTypes();
 
         var allCommandsReference = assemblyTypes.Where(type =>
                 typeof(ICommand).IsAssignableFrom(type) && type is { IsAbstract: false, IsInterface: false })
