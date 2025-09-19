@@ -1,5 +1,5 @@
-using System.ComponentModel;
 using System.Text.Json.Serialization;
+using Disconance.Models.Components;
 using Disconance.Models.JsonConverters;
 
 namespace Disconance.Models.Interactions;
