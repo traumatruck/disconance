@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using Disconance.Http.Json;
 using Disconance.Interactions.Commands;
+using Disconance.Interactions.Events;
 using Disconance.Interactions.Processors.Results;
 using Disconance.Models.Interactions;
 using Microsoft.Extensions.Options;
@@ -14,7 +15,8 @@ public class InteractionRequestProcessor(
     ICommandProcessor commandProcessor,
     IOptions<DiscordJsonOptions> jsonOptions,
     IModalSubmitHandler modalSubmitHandler,
-    IMessageComponentHandler messageComponentHandler
+    IMessageComponentHandler messageComponentHandler,
+    IInteractionEventPublisher interactionEventPublisher
 ) : IInteractionRequestProcessor
 {
     /// <inheritdoc />
@@ -30,6 +32,12 @@ public class InteractionRequestProcessor(
                 ErrorMessage = "Failed to deserialize interaction request."
             };
         }
+
+        // Publish event to all subscribers (non-blocking)
+        _ = interactionEventPublisher.PublishAsync(new InteractionReceivedContext
+        {
+            Interaction = interactionRequest
+        });
 
         var interactionRequestType = interactionRequest.Type;
 

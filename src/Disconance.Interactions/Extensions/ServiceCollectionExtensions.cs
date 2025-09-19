@@ -2,6 +2,7 @@
 using Disconance.Interactions.Attributes;
 using Disconance.Interactions.Commands;
 using Disconance.Interactions.Processors;
+using Disconance.Interactions.Events;
 using Disconance.Interactions.Security;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,8 +25,20 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<IModalSubmitHandler, ModalSubmitHandler>();
         serviceCollection.AddScoped<IMessageComponentHandler, MessageComponentHandler>();
 
+        serviceCollection.AddSingleton<IInteractionEventPublisher, InteractionEventPublisher>();
+
         var assemblies = CommandAssemblyAttribute.GetCommandAssemblies();
         var assemblyTypes = assemblies.SelectMany(assembly => assembly.GetTypes()).ToImmutableArray();
+
+        // Auto-register all event subscribers found in the scanned assemblies
+        var subscriberTypes = assemblyTypes.Where(type =>
+            type is { IsAbstract: false, IsInterface: false } &&
+            typeof(IInteractionEventSubscriber).IsAssignableFrom(type));
+
+        foreach (var type in subscriberTypes)
+        {
+            serviceCollection.AddScoped(typeof(IInteractionEventSubscriber), type);
+        }
 
         // Register simple commands
         var simpleCommandTypes = assemblyTypes.Where(type =>
@@ -34,7 +47,7 @@ public static class ServiceCollectionExtensions
 
         foreach (var type in simpleCommandTypes)
         {
-            serviceCollection.AddTransient(typeof(ISimpleCommand), type);
+            serviceCollection.AddScoped(typeof(ISimpleCommand), type);
         }
 
         // Register base commands
@@ -44,7 +57,7 @@ public static class ServiceCollectionExtensions
 
         foreach (var type in baseCommandTypes)
         {
-            serviceCollection.AddTransient(type.BaseType!, type);
+            serviceCollection.AddScoped(type.BaseType!, type);
         }
 
         // Register subcommand groups
@@ -54,7 +67,7 @@ public static class ServiceCollectionExtensions
 
         foreach (var type in subcommandGroupTypes)
         {
-            serviceCollection.AddTransient(type.BaseType!, type);
+            serviceCollection.AddScoped(type.BaseType!, type);
         }
 
         // Register subcommands with a group
@@ -67,7 +80,7 @@ public static class ServiceCollectionExtensions
             var @interface = type.GetInterfaces()
                 .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISubcommand<,>));
 
-            serviceCollection.AddTransient(@interface, type);
+            serviceCollection.AddScoped(@interface, type);
         }
 
         // Register subcommands without a group
@@ -77,12 +90,12 @@ public static class ServiceCollectionExtensions
 
         foreach (var type in subcommandTypes)
         {
-            serviceCollection.AddTransient(typeof(ICommand), type);
+            serviceCollection.AddScoped(typeof(ICommand), type);
 
             var @interface = type.GetInterfaces()
                 .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISubcommand<>));
 
-            serviceCollection.AddTransient(@interface, type);
+            serviceCollection.AddScoped(@interface, type);
         }
 
         // Register message components
@@ -92,7 +105,7 @@ public static class ServiceCollectionExtensions
 
         foreach (var type in messageComponents)
         {
-            serviceCollection.AddTransient(typeof(IMessageComponent), type);
+            serviceCollection.AddScoped(typeof(IMessageComponent), type);
         }
 
         return serviceCollection;
