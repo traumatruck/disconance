@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disconance", "src\Disconanc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disconance.Http.Requests", "src\Disconance.Http.Requests\Disconance.Http.Requests.csproj", "{04CFBE11-F074-463E-995E-28F5B9F45B14}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disconance.Interactions", "src\Disconance.Interactions\Disconance.Interactions.csproj", "{FD3FCFA1-CCEA-467F-A400-344C00DC5072}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{04CFBE11-F074-463E-995E-28F5B9F45B14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04CFBE11-F074-463E-995E-28F5B9F45B14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04CFBE11-F074-463E-995E-28F5B9F45B14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD3FCFA1-CCEA-467F-A400-344C00DC5072}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD3FCFA1-CCEA-467F-A400-344C00DC5072}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD3FCFA1-CCEA-467F-A400-344C00DC5072}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD3FCFA1-CCEA-467F-A400-344C00DC5072}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
