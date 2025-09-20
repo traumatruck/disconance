@@ -93,13 +93,16 @@ public static class WebApplicationExtensions
 
         foreach (var commandAssembly in commandAssemblies)
         {
-            var guildId =
-                commandAssembly.CustomAttributes
-                    .SingleOrDefault(attribute => attribute.AttributeType == typeof(CommandAssemblyAttribute))
-                    ?.ConstructorArguments.SingleOrDefault().Value as Snowflake?;
+            var commandAttributes = commandAssembly.CustomAttributes.Where(attribute =>
+                attribute.AttributeType == typeof(CommandAssemblyAttribute));
 
-            await commandRegisterer.RegisterCommandsAsync(commandAssembly, guildId,
-                applicationLifetime.ApplicationStopping);
+            foreach (var attribute in commandAttributes)
+            {
+                var guildId = attribute.ConstructorArguments.SingleOrDefault().Value as Snowflake?;
+                
+                await commandRegisterer.RegisterCommandsAsync(commandAssembly, guildId,
+                    applicationLifetime.ApplicationStopping);
+            }
         }
     }
 }
