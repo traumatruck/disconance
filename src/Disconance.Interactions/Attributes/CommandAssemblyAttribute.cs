@@ -13,7 +13,7 @@ public sealed class CommandAssemblyAttribute : Attribute
     ///     Gets or sets the optional Guild ID associated with the command assembly. If specified, commands within the assembly
     ///     will only be registered for the specified guild.
     /// </summary>
-    public Snowflake? GuildId { get; set; } = null;
+    public ulong? GuildId { get; set; } = null;
 
     /// <summary>
     ///     Retrieves all assemblies in the current application domain that are marked with the
