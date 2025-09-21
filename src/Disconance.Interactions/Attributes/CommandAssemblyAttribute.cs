@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using Disconance.Models;
 
 namespace Disconance.Interactions.Attributes;
 
@@ -13,7 +12,7 @@ public sealed class CommandAssemblyAttribute : Attribute
     ///     Gets or sets the optional Guild ID associated with the command assembly. If specified, commands within the assembly
     ///     will only be registered for the specified guild.
     /// </summary>
-    public ulong? GuildId { get; set; } = null;
+    public ulong GuildId { get; init; }
 
     /// <summary>
     ///     Retrieves all assemblies in the current application domain that are marked with the
