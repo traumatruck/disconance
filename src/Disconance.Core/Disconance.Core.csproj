@@ -6,8 +6,4 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Disconance.Http\Disconance.Http.csproj" PrivateAssets="all"/>
-    </ItemGroup>
-
 </Project>

@@ -1,4 +1,6 @@
-﻿using Disconance.Configuration;
+﻿using Disconance.Core.Configuration;
+using Disconance.Http.Extensions;
+using Disconance.Interactions.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Disconance.Extensions;
@@ -17,6 +19,6 @@ public static class ServiceCollectionExtensions
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
-        return serviceCollection;
+        return serviceCollection.AddInteractions().AddHttp();
     }
 }

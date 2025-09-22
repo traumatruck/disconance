@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Immutable;
 using System.Reflection;
-using Disconance.Configuration;
+using Disconance.Core.Configuration;
 using Disconance.Http.Models;
 using Disconance.Http.Requests;
 using Disconance.Http.Requests.Applications;

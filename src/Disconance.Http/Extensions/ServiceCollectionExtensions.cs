@@ -1,11 +1,11 @@
-using Disconance.Configuration;
+using Disconance.Core.Configuration;
 using Disconance.Http.Requests;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace Disconance.Http.Extensions;
 
-public static class ServiceCollectionExtensions
+internal static class ServiceCollectionExtensions
 {
     private const string ApiUrl = "https://discord.com/api";
     private const int ApiVersion = 10;
@@ -17,7 +17,7 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="serviceCollection">The service collection to which the services are added.</param>
     /// <returns>The updated service collection with the added services.</returns>
-    public static IServiceCollection AddHttp(this IServiceCollection serviceCollection)
+    internal static IServiceCollection AddHttp(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddSingleton<IRequestSender, RequestSender>();
         serviceCollection.AddTransient(typeof(IRequestHandler<,>), typeof(DefaultRequestHandler<,>));

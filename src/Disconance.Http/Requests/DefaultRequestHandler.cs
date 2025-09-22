@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Immutable;
 using System.Net.Http.Json;
 using System.Reflection;
 using System.Text;
@@ -25,7 +27,6 @@ public class DefaultRequestHandler<TResource, TResponse>(
 ) : IRequestHandler<TResource, TResponse> where TResource : IRequest<TResponse>
 {
     private readonly HttpClient _httpClient = httpClientFactory.CreateClient("HttpApi");
-    private readonly ILogger _logger = logger;
 
     /// <summary>
     ///     Handles the given request and processes it asynchronously.
@@ -68,7 +69,7 @@ public class DefaultRequestHandler<TResource, TResponse>(
         {
             var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
 
-            _logger.LogError("Request to {Path} failed with {StatusCode}: {Error}", resource.Path, response.StatusCode,
+            logger.LogError("Request to {Path} failed with {StatusCode}: {Error}", resource.Path, response.StatusCode,
                 errorContent);
         }
 
@@ -91,7 +92,22 @@ public class DefaultRequestHandler<TResource, TResponse>(
 
     private static object GetRequestBody(TResource resource)
     {
-        return resource;
+        var properties = typeof(TResource).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+        var collectionProperties = properties
+            .Where(p => typeof(IEnumerable).IsAssignableFrom(p.PropertyType) && p.PropertyType != typeof(string))
+            .ToImmutableArray();
+
+        if (collectionProperties.Length != 1)
+        {
+            return resource;
+        }
+
+        var value = collectionProperties.First().GetValue(resource);
+        
+        // Return the body as an array if the property is an array
+        // Otherwise, the entire object should be serialized
+        return value ?? resource;
     }
 
     private static Dictionary<string, string> GetQueryParameters(TResource resource)

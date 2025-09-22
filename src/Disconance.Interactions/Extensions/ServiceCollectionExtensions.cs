@@ -4,6 +4,7 @@ using Disconance.Interactions.Commands;
 using Disconance.Interactions.Processors;
 using Disconance.Interactions.Events;
 using Disconance.Interactions.Security;
+using Disconance.Interactions.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Disconance.Interactions.Extensions;
@@ -15,7 +16,7 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="serviceCollection">The instance of IServiceCollection used for dependency injection.</param>
     /// <returns>The updated IServiceCollection to support chaining of method calls.</returns>
-    public static IServiceCollection AddInteractions(this IServiceCollection serviceCollection)
+    internal static IServiceCollection AddInteractions(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<IInteractionSecurityHandler, NSecInteractionSecurityHandler>();
         serviceCollection.AddScoped<IInteractionRequestProcessor, InteractionRequestProcessor>();
@@ -24,6 +25,9 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<ICommandRepository, CommandRepository>();
         serviceCollection.AddScoped<IModalSubmitHandler, ModalSubmitHandler>();
         serviceCollection.AddScoped<IMessageComponentHandler, MessageComponentHandler>();
+
+        serviceCollection.AddScoped<IInteractionHandler, InteractionHandler>();
+        serviceCollection.AddScoped<ICommandRegistrationService, CommandRegistrationService>();
 
         serviceCollection.AddSingleton<IInteractionEventPublisher, InteractionEventPublisher>();
 

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Disconance.Configuration;
+namespace Disconance.Core.Configuration;
 
 /// <summary>
 ///     Represents configuration options for the Disconance library.
