@@ -2,9 +2,9 @@
 using Disconance.Interactions.Attributes;
 using Disconance.Interactions.Commands;
 using Disconance.Interactions.Processors;
-using Disconance.Interactions.Events;
 using Disconance.Interactions.Security;
 using Disconance.Interactions.Handlers;
+using Disconance.Interactions.Middleware;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Disconance.Interactions.Extensions;
@@ -25,23 +25,21 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<ICommandRepository, CommandRepository>();
         serviceCollection.AddScoped<IModalSubmitHandler, ModalSubmitHandler>();
         serviceCollection.AddScoped<IMessageComponentHandler, MessageComponentHandler>();
-
         serviceCollection.AddScoped<IInteractionHandler, InteractionHandler>();
         serviceCollection.AddScoped<ICommandRegistrationService, CommandRegistrationService>();
-
-        serviceCollection.AddSingleton<IInteractionEventPublisher, InteractionEventPublisher>();
+        serviceCollection.AddScoped<IInteractionMiddlewarePipeline, InteractionMiddlewareMiddlewarePipeline>();
 
         var assemblies = CommandAssemblyAttribute.GetCommandAssemblies();
         var assemblyTypes = assemblies.SelectMany(assembly => assembly.GetTypes()).ToImmutableArray();
 
-        // Auto-register all event subscribers found in the scanned assemblies
-        var subscriberTypes = assemblyTypes.Where(type =>
+        // Auto-register all middleware found in the scanned assemblies
+        var middlewareTypes = assemblyTypes.Where(type =>
             type is { IsAbstract: false, IsInterface: false } &&
-            typeof(IInteractionEventSubscriber).IsAssignableFrom(type));
+            typeof(IInteractionMiddleware).IsAssignableFrom(type));
 
-        foreach (var type in subscriberTypes)
+        foreach (var type in middlewareTypes)
         {
-            serviceCollection.AddScoped(typeof(IInteractionEventSubscriber), type);
+            serviceCollection.AddScoped(typeof(IInteractionMiddleware), type);
         }
 
         // Register simple commands

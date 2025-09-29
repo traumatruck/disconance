@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using Disconance.Http.Json;
 using Disconance.Interactions.Commands;
-using Disconance.Interactions.Events;
+using Disconance.Interactions.Middleware;
 using Disconance.Interactions.Processors.Results;
 using Disconance.Models.Interactions;
 using Microsoft.Extensions.Options;
@@ -16,7 +16,7 @@ public class InteractionRequestProcessor(
     IOptions<DiscordJsonOptions> jsonOptions,
     IModalSubmitHandler modalSubmitHandler,
     IMessageComponentHandler messageComponentHandler,
-    IInteractionEventPublisher interactionEventPublisher
+    IInteractionMiddlewarePipeline interactionMiddlewarePipeline
 ) : IInteractionRequestProcessor
 {
     /// <inheritdoc />
@@ -33,29 +33,30 @@ public class InteractionRequestProcessor(
             };
         }
 
-        // Publish event to all subscribers (non-blocking)
-        _ = interactionEventPublisher.PublishAsync(new InteractionReceivedContext
+        // Execute middleware pipeline
+        var context = new InteractionReceivedContext
         {
             Interaction = interactionRequest
-        });
+        };
+        
+        try
+        {
+            var interactionResponse = await interactionMiddlewarePipeline.InvokeAsync(context,
+                async () => await ProcessInteractionRequestByTypeAsync(interactionRequest.Type, interactionRequest) ??
+                            throw new InvalidOperationException("Interaction response cannot be null"));
 
-        var interactionRequestType = interactionRequest.Type;
-
-        var interactionResponse =
-            await ProcessInteractionRequestByTypeAsync(interactionRequestType, interactionRequest);
-
-        if (interactionResponse == null)
+            return new SuccessfulInteractionRequestProcessorResult
+            {
+                InteractionResponse = interactionResponse
+            };
+        }
+        catch (Exception)
         {
             return new FailedInteractionRequestProcessorResult
             {
-                ErrorMessage = $"Failed to process interaction request of type {interactionRequestType}."
+                ErrorMessage = $"Failed to process interaction request of type {interactionRequest.Type}."
             };
         }
-
-        return new SuccessfulInteractionRequestProcessorResult
-        {
-            InteractionResponse = interactionResponse
-        };
     }
 
     private async Task<InteractionResponse?> ProcessInteractionRequestByTypeAsync(

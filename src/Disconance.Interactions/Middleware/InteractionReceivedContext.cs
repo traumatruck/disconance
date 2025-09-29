@@ -1,6 +1,6 @@
 using Disconance.Models.Interactions;
 
-namespace Disconance.Interactions.Events;
+namespace Disconance.Interactions.Middleware;
 
 /// <summary>
 ///     Context passed to subscribers when an interaction is received.
