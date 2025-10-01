@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Disconance.Interactions.Attributes;
+namespace Disconance.Interactions.Commands;
 
 /// <summary>
 ///     Represents an attribute used to indicate that the assembly contains registerable commands.

@@ -18,7 +18,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Disconance.Http\Disconance.Http.csproj"/>
-        <ProjectReference Include="..\Disconance.Http.Requests\Disconance.Http.Requests.csproj" PrivateAssets="all"/>
     </ItemGroup>
 
 </Project>

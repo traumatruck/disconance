@@ -1,9 +1,13 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Disconance.Core.Configuration;
 using Disconance.Http.Json;
-using Disconance.Interactions.Commands;
-using Disconance.Interactions.Middleware;
 using Disconance.Interactions.Processors.Results;
+using Disconance.Interactions.Security;
 using Disconance.Models.Interactions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Disconance.Interactions.Processors;
@@ -12,66 +16,84 @@ namespace Disconance.Interactions.Processors;
 ///     Processes interaction requests received from the application.
 /// </summary>
 public class InteractionRequestProcessor(
-    ICommandProcessor commandProcessor,
-    IOptions<DiscordJsonOptions> jsonOptions,
-    IModalSubmitHandler modalSubmitHandler,
-    IMessageComponentHandler messageComponentHandler,
-    IInteractionMiddlewarePipeline interactionMiddlewarePipeline
+    IOptions<DisconanceOptions> disconanceOptions,
+    IOptions<DiscordJsonOptions> discordJsonOptions,
+    IInteractionHandler interactionHandler,
+    IInteractionSecurityHandler interactionSecurityHandler,
+    ILogger<InteractionRequestProcessor> logger
 ) : IInteractionRequestProcessor
 {
     /// <inheritdoc />
-    public async Task<IInteractionRequestProcessorResult> ProcessInteractionRequestAsync(string requestData)
+    public async Task<IInteractionRequestProcessorResult> ProcessInteractionRequestAsync(HttpRequest interactionRequest)
     {
-        var interactionRequest =
-            JsonSerializer.Deserialize<Interaction>(requestData, jsonOptions.Value.SerializerOptions);
+        logger.LogTrace("Processing interaction request...");
 
-        if (interactionRequest == null)
+        var signature = interactionRequest.Headers["X-Signature-Ed25519"].FirstOrDefault();
+        var timestamp = interactionRequest.Headers["X-Signature-Timestamp"].FirstOrDefault();
+        var bodyBytes = new byte[interactionRequest.ContentLength ?? 0];
+        await interactionRequest.Body.ReadExactlyAsync(bodyBytes);
+
+        if (signature == null || timestamp == null)
         {
+            const string errorMessage = "Received interaction request without required headers.";
+            logger.LogWarning(errorMessage);
+
             return new FailedInteractionRequestProcessorResult
             {
-                ErrorMessage = "Failed to deserialize interaction request."
+                ErrorMessage = errorMessage
             };
         }
 
-        // Execute middleware pipeline
-        var context = new InteractionReceivedContext
-        {
-            Interaction = interactionRequest
-        };
-        
-        try
-        {
-            var interactionResponse = await interactionMiddlewarePipeline.InvokeAsync(context,
-                async () => await ProcessInteractionRequestByTypeAsync(interactionRequest.Type, interactionRequest) ??
-                            throw new InvalidOperationException("Interaction response cannot be null"));
+        var requestBody = Encoding.UTF8.GetString(bodyBytes);
 
-            return new SuccessfulInteractionRequestProcessorResult
+        if (!interactionSecurityHandler.ValidateInteractionSignature(requestBody, signature, timestamp,
+                disconanceOptions.Value.PublicKey))
+        {
+            const string errorMessage = "Received interaction request with invalid signature.";
+            logger.LogWarning(errorMessage);
+            
+            return new UnauthorizedInteractionRequestProcessorResult
             {
-                InteractionResponse = interactionResponse
+                ErrorMessage = errorMessage
             };
         }
-        catch (Exception)
+
+        logger.LogDebug("Received interaction request data: {RequestBody}", requestBody);
+
+        var serializerOptions = discordJsonOptions.Value.SerializerOptions;
+        var interaction = JsonSerializer.Deserialize<Interaction>(requestBody, serializerOptions);
+
+        if (interaction == null)
         {
+            const string errorMessage = "Failed to deserialize interaction request.";
+            logger.LogError(errorMessage);
+            
             return new FailedInteractionRequestProcessorResult
             {
-                ErrorMessage = $"Failed to process interaction request of type {interactionRequest.Type}."
+                ErrorMessage = errorMessage
             };
         }
-    }
 
-    private async Task<InteractionResponse?> ProcessInteractionRequestByTypeAsync(
-        InteractionType interactionCallbackType, Interaction interaction)
-    {
-        return interactionCallbackType switch
+        InteractionResponse interactionResponse;
+
+        if (interaction.Type == InteractionType.Ping)
         {
-            InteractionType.Ping => new InteractionResponse
+            interactionResponse = new InteractionResponse
             {
                 Type = InteractionCallbackType.Pong
-            },
-            InteractionType.ApplicationCommand => await commandProcessor.ProcessCommandAsync(interaction),
-            InteractionType.MessageComponent => await messageComponentHandler.HandleAsync(interaction),
-            InteractionType.ModalSubmit => await modalSubmitHandler.HandleAsync(interaction),
-            _ => null
+            };
+        }
+        else
+        {
+            interactionResponse = await interactionHandler.HandleInteractionAsync(interaction);
+        }
+
+        var serializedInteractionResponse = JsonSerializer.Serialize(interactionResponse, serializerOptions);
+
+        return new SuccessfulInteractionRequestProcessorResult
+        {
+            InteractionResponse = interactionResponse,
+            SerializedInteractionResponse = serializedInteractionResponse
         };
     }
 }

@@ -1,5 +1,3 @@
-using Disconance.Interactions.Attributes;
-using Disconance.Models;
 using Microsoft.Extensions.Logging;
 
 namespace Disconance.Interactions.Commands;
