@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Disconance.Core.Configuration;
 using Disconance.Http.Json;
+using Disconance.Interactions.Middleware;
 using Disconance.Interactions.Processors.Results;
 using Disconance.Interactions.Security;
 using Disconance.Models.Interactions;
@@ -19,6 +20,7 @@ public class InteractionRequestProcessor(
     IOptions<DisconanceOptions> disconanceOptions,
     IOptions<DiscordJsonOptions> discordJsonOptions,
     IInteractionHandler interactionHandler,
+    IInteractionMiddlewarePipeline interactionMiddlewarePipeline,
     IInteractionSecurityHandler interactionSecurityHandler,
     ILogger<InteractionRequestProcessor> logger
 ) : IInteractionRequestProcessor
@@ -85,7 +87,24 @@ public class InteractionRequestProcessor(
         }
         else
         {
-            interactionResponse = await interactionHandler.HandleInteractionAsync(interaction);
+            // Execute middleware pipeline
+            var context = new InteractionReceivedContext
+            {
+                Interaction = interaction
+            };
+        
+            try
+            {
+                interactionResponse = await interactionMiddlewarePipeline.InvokeAsync(context,
+                    async () => await interactionHandler.HandleInteractionAsync(interaction));
+            }
+            catch (Exception)
+            {
+                return new FailedInteractionRequestProcessorResult
+                {
+                    ErrorMessage = $"Failed to process interaction request of type {interaction.Type}."
+                };
+            }
         }
 
         var serializedInteractionResponse = JsonSerializer.Serialize(interactionResponse, serializerOptions);
