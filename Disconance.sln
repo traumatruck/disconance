@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disconance.Models", "src\Di
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disconance.Http", "src\Disconance.Http\Disconance.Http.csproj", "{D8BCEFFB-440F-4B8C-AE89-53A89CC33865}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disconance", "src\Disconance\Disconance.csproj", "{61BCE839-3E5D-4678-8D59-C9DE23E5C70A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disconance.Http.Requests", "src\Disconance.Http.Requests\Disconance.Http.Requests.csproj", "{04CFBE11-F074-463E-995E-28F5B9F45B14}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disconance.Interactions", "src\Disconance.Interactions\Disconance.Interactions.csproj", "{FD3FCFA1-CCEA-467F-A400-344C00DC5072}"
@@ -32,10 +30,6 @@ Global
 		{D8BCEFFB-440F-4B8C-AE89-53A89CC33865}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8BCEFFB-440F-4B8C-AE89-53A89CC33865}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8BCEFFB-440F-4B8C-AE89-53A89CC33865}.Release|Any CPU.Build.0 = Release|Any CPU
-		{61BCE839-3E5D-4678-8D59-C9DE23E5C70A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{61BCE839-3E5D-4678-8D59-C9DE23E5C70A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{61BCE839-3E5D-4678-8D59-C9DE23E5C70A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{61BCE839-3E5D-4678-8D59-C9DE23E5C70A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{04CFBE11-F074-463E-995E-28F5B9F45B14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{04CFBE11-F074-463E-995E-28F5B9F45B14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04CFBE11-F074-463E-995E-28F5B9F45B14}.Release|Any CPU.ActiveCfg = Release|Any CPU
