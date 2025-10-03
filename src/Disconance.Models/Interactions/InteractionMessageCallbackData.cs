@@ -41,7 +41,7 @@ public record InteractionMessageCallbackData : IInteractionCallbackData
     ///     Message components.
     /// </summary>
     [JsonConverter(typeof(ComponentCollectionJsonConverter))]
-    public IEnumerable<IComponent>? Components { get; init; }
+    public IEnumerable<IComponent>? Components { get; set; }
 
     /// <summary>
     ///     Attachment objects with filename and description.
