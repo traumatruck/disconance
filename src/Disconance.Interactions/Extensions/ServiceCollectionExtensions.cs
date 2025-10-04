@@ -1,5 +1,6 @@
 ﻿using Disconance.Core.Configuration;
 using Disconance.Http.Extensions;
+using Disconance.Interactions.Middleware;
 using Disconance.Interactions.Processors;
 using Disconance.Interactions.Security;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,7 @@ public static class ServiceCollectionExtensions
     {
         serviceCollection.AddScoped<IInteractionSecurityHandler, NSecInteractionSecurityHandler>();
         serviceCollection.AddScoped<IInteractionRequestProcessor, InteractionRequestProcessor>();
+        serviceCollection.AddScoped<IInteractionMiddlewarePipeline, InteractionMiddlewareMiddlewarePipeline>();
 
         return serviceCollection.AddDisconanceHttp();
     }
