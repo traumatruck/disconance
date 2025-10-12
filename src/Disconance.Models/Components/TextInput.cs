@@ -7,9 +7,9 @@ namespace Disconance.Models.Components;
 public class TextInput : IComponent
 {
     /// <summary>
-    ///     Type of the component.
+    ///     Developer-defined identifier for the input; max 100 characters.
     /// </summary>
-    public ComponentType Type => ComponentType.TextInput;
+    public string CustomId { get; set; } = string.Empty;
 
     /// <summary>
     ///     Optional identifier for the component.
@@ -17,14 +17,9 @@ public class TextInput : IComponent
     public int? Id { get; set; }
 
     /// <summary>
-    ///     Developer-defined identifier for the input; max 100 characters.
+    ///     Maximum input length for a text input; min 1, max 4000.
     /// </summary>
-    public string CustomId { get; set; } = string.Empty;
-
-    /// <summary>
-    ///     The Text Input Style.
-    /// </summary>
-    public TextInputStyle Style { get; set; }
+    public int? MaxLength { get; set; }
 
     /// <summary>
     ///     Minimum input length for a text input; min 0, max 4000.
@@ -32,9 +27,9 @@ public class TextInput : IComponent
     public int? MinLength { get; set; }
 
     /// <summary>
-    ///     Maximum input length for a text input; min 1, max 4000.
+    ///     Custom placeholder text if the input is empty; max 100 characters.
     /// </summary>
-    public int? MaxLength { get; set; }
+    public string? Placeholder { get; set; }
 
     /// <summary>
     ///     Whether this component is required to be filled (defaults to true).
@@ -42,12 +37,17 @@ public class TextInput : IComponent
     public bool? Required { get; set; }
 
     /// <summary>
+    ///     The Text Input Style.
+    /// </summary>
+    public TextInputStyle Style { get; set; }
+
+    /// <summary>
+    ///     Type of the component.
+    /// </summary>
+    public ComponentType Type => ComponentType.TextInput;
+
+    /// <summary>
     ///     Pre-filled value for this component; max 4000 characters.
     /// </summary>
     public string? Value { get; set; }
-
-    /// <summary>
-    ///     Custom placeholder text if the input is empty; max 100 characters.
-    /// </summary>
-    public string? Placeholder { get; set; }
 }

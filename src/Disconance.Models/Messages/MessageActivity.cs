@@ -6,12 +6,12 @@ namespace Disconance.Models.Messages;
 public class MessageActivity
 {
     /// <summary>
-    ///     Type of message activity.
-    /// </summary>
-    public MessageActivityType Type { get; set; }
-
-    /// <summary>
     ///     party_id from a Rich Presence event.
     /// </summary>
     public string? PartyId { get; set; }
+
+    /// <summary>
+    ///     Type of message activity.
+    /// </summary>
+    public MessageActivityType Type { get; set; }
 }

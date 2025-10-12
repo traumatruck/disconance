@@ -1,5 +1,4 @@
-﻿using Disconance.Core.Configuration;
-using Disconance.Http.Extensions;
+﻿using Disconance.Http.Extensions;
 using Disconance.Interactions.Middleware;
 using Disconance.Interactions.Processors;
 using Disconance.Interactions.Security;
