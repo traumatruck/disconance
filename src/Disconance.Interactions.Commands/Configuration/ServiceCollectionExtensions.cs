@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Disconance.Interactions.Commands.Modals;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Disconance.Interactions.Commands.Configuration;
@@ -9,7 +10,7 @@ public static class ServiceCollectionExtensions
     {
         serviceCollection.AddScoped<ICommandRegistrationService, CommandRegistrationService>();
 
-        // Scan all assemblies and register commands and command behaviors
+        // Scan all assemblies and register interaction commands/components/modals
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
         foreach (var assembly in assemblies)
@@ -32,6 +33,7 @@ public static class ServiceCollectionExtensions
                     continue;
                 }
 
+                // Register command types
                 var isCommandType = typeof(ICommand).IsAssignableFrom(type);
                 var isCommandBehaviorType = typeof(ICommandBehavior).IsAssignableFrom(type);
 
@@ -49,6 +51,22 @@ public static class ServiceCollectionExtensions
                 if (isCommandBehaviorType)
                 {
                     serviceCollection.AddScoped(typeof(ICommandBehavior), type);
+                }
+                
+                // Register message component types
+                var isMessageComponentType = typeof(IMessageComponent).IsAssignableFrom(type);
+                
+                if (isMessageComponentType)
+                {
+                    serviceCollection.AddScoped(typeof(IMessageComponent), type);
+                }
+                
+                // Register modal types
+                var isModalType = typeof(IModalForm).IsAssignableFrom(type);
+                
+                if (isModalType)
+                {
+                    serviceCollection.AddScoped(typeof(IModalForm), type);
                 }
             }
         }

@@ -1,6 +1,6 @@
 ﻿using Disconance.Models.Interactions;
 
-namespace Disconance.Interactions.Commands.Components;
+namespace Disconance.Interactions.Commands;
 
 public interface IMessageComponent
 {
