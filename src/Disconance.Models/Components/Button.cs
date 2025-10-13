@@ -21,7 +21,7 @@ public class Button : IComponent
     /// <summary>
     ///     A button style.
     /// </summary>
-    public ButtonStyle Style { get; set; }
+    public required ButtonStyle Style { get; init; }
 
     /// <summary>
     ///     Text that appears on the button; max 80 characters.
