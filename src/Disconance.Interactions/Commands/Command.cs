@@ -9,4 +9,6 @@ public abstract class Command : ICommand
     public abstract string Description { get; }
 
     public abstract string Name { get; }
+
+    public abstract ApplicationCommandType Type { get; }
 }

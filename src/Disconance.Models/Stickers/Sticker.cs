@@ -6,6 +6,11 @@ namespace Disconance.Models.Stickers;
 public class Sticker
 {
     /// <summary>
+    ///     Type of sticker.
+    /// </summary>
+    public int FormatType { get; set; }
+
+    /// <summary>
     ///     ID of the sticker.
     /// </summary>
     public Snowflake Id { get; set; }
@@ -14,9 +19,4 @@ public class Sticker
     ///     Name of the sticker.
     /// </summary>
     public string Name { get; set; } = string.Empty;
-
-    /// <summary>
-    ///     Type of sticker.
-    /// </summary>
-    public int FormatType { get; set; }
 }

@@ -50,7 +50,8 @@ public class CommandRegistrationService(
         var applicationCommand = new ApplicationCommand
         {
             Name = command.Name,
-            Description = command.Description
+            Description = command.Description,
+            Type = command.Type
         };
 
         if (command is Command commandImpl)
