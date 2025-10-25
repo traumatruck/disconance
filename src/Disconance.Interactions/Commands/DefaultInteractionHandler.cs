@@ -1,8 +1,6 @@
-﻿using Disconance.Interactions.Commands;
-using Disconance.Interactions.Commands.Modals;
-using Disconance.Models.Interactions;
+﻿using Disconance.Models.Interactions;
 
-namespace Disconance.Interactions;
+namespace Disconance.Interactions.Commands;
 
 public class DefaultInteractionHandler(
     IEnumerable<ICommandBehavior> commandBehaviors,
@@ -21,7 +19,13 @@ public class DefaultInteractionHandler(
                         commandBehavior.CommandName == interactionData.Name) ??
                     throw new InvalidOperationException($"No command behavior found for: {interactionData.Name}");
 
-                return await commandBehavior.ExecuteAsync(interaction, cancellationToken);
+                if (interaction.Data is not ApplicationCommandData interactionInteractionData)
+                {
+                    throw new InvalidOperationException(
+                        "Expected interaction data to be of type ApplicationCommandData.");
+                }
+
+                return await commandBehavior.ExecuteAsync(interaction, interactionInteractionData, cancellationToken);
             }
             case { Type: InteractionType.MessageComponent, Data: MessageComponentData messageComponentData }:
             {
@@ -32,17 +36,30 @@ public class DefaultInteractionHandler(
                         messageComponent.Name == customId) ??
                     throw new InvalidOperationException($"No message component found for: {customId}");
 
-                return await messageComponent.ExecuteAsync(interaction, cancellationToken);
+                if (interaction.Data is not MessageComponentData messageInteractionData)
+                {
+                    throw new InvalidOperationException(
+                        "Expected interaction data to be of type MessageComponentData.");
+                }
+
+                return await messageComponent.ExecuteAsync(interaction, messageInteractionData, cancellationToken);
             }
             case { Type: InteractionType.ModalSubmit, Data: ModalSubmitData modalSubmitData }:
             {
                 var customId = modalSubmitData.CustomId.Split("|")[0];
 
                 var modal =
-                    modals.SingleOrDefault(modal => modal.Name == customId) ??
+                    modals.SingleOrDefault(modal =>
+                        modal.Name == customId) ??
                     throw new InvalidOperationException($"No modal found for: {customId}");
 
-                return await modal.ExecuteAsync(interaction, cancellationToken);
+                if (interaction.Data is not ModalSubmitData modalInteractionData)
+                {
+                    throw new InvalidOperationException(
+                        "Expected interaction data to be of type ModalSubmitData.");
+                }
+
+                return await modal.ExecuteAsync(interaction, modalInteractionData, cancellationToken);
             }
         }
 

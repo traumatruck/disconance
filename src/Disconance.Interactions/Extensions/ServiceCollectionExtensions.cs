@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using Disconance.Http.Extensions;
 using Disconance.Interactions.Commands;
-using Disconance.Interactions.Commands.Modals;
 using Disconance.Interactions.Middleware;
 using Disconance.Interactions.Processors;
 using Disconance.Interactions.Security;

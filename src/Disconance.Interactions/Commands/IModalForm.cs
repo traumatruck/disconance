@@ -2,10 +2,10 @@
 
 namespace Disconance.Interactions.Commands;
 
-public interface IMessageComponent
+public interface IModalForm
 {
     string Name { get; }
 
-    Task<InteractionResponse> ExecuteAsync(Interaction interaction, MessageComponentData messageComponentData,
+    Task<InteractionResponse> ExecuteAsync(Interaction interaction, ModalSubmitData modalSubmitData,
         CancellationToken cancellationToken = default);
 }

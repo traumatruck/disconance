@@ -6,5 +6,6 @@ public interface ICommandBehavior
 {
     public string CommandName { get; }
 
-    Task<InteractionResponse> ExecuteAsync(Interaction interaction, CancellationToken cancellationToken = default);
+    Task<InteractionResponse> ExecuteAsync(Interaction interaction, ApplicationCommandData applicationCommandData,
+        CancellationToken cancellationToken = default);
 }
